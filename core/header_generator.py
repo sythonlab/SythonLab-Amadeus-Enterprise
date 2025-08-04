@@ -9,7 +9,6 @@ import settings
 class AmadeusHeaderGenerator:
     message_id = None
     action = None
-    to = None
     nonce_bytes = None
     nonce = None
     created_at = None
@@ -24,16 +23,6 @@ class AmadeusHeaderGenerator:
         clean_b64 = b64_encoded.replace('=', '').replace('_', '-').replace('/', '')
         self.message_id = clean_b64[:43]
 
-    def generate_action(self, target):
-        self.action = {
-            'availability': 'http://webservices.amadeus.com/FMPTBQ_24_1_1A'
-        }[target]
-
-    def generate_to(self, target):
-        self.to = {
-            'availability': settings.AMADEUS_CONFIG['ENDPOINTS']['FLIGHT_AVAILABILITY'],
-        }[target]
-
     def generate_nonce(self):
         self.nonce_bytes = os.urandom(16)
         self.nonce = base64.b64encode(self.nonce_bytes).decode('utf-8')
@@ -47,10 +36,8 @@ class AmadeusHeaderGenerator:
         digest = hashlib.sha1(concatenated).digest()
         self.password_digest = base64.b64encode(digest).decode('utf-8')
 
-    def generate_header(self, target):
+    def generate_header(self):
         self.generate_message_id()
-        self.generate_action(target)
-        self.generate_to(target)
         self.generate_created_at()
         self.generate_nonce()
         self.generate_password_digest()
