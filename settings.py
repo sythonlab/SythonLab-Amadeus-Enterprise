@@ -8,10 +8,10 @@ BASE_DIR = Path(__file__).resolve().parent
 load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 AMADEUS_CONFIG = {
-    'OFFICE_ID': 'KIN1S2312',
-    'USERNAME': 'WSCPJCAR',
-    'PASSWORD': '6WbmmXZJGS?D',
+    'OFFICE_ID': os.getenv('AMADEUS_OFFICE_ID'),
+    'USERNAME': os.getenv('AMADEUS_USERNAME'),
+    'PASSWORD': os.getenv('AMADEUS_PASSWORD'),
     'ENDPOINTS': {
-        'FLIGHT_AVAILABILITY': 'https://nodeD1.test.webservices.amadeus.com/1ASIWCARCPJ'
+        'FLIGHT_AVAILABILITY': os.getenv('AMADEUS_FLIGHT_AVAILABILITY_ENDPOINT'),
     },
 }
