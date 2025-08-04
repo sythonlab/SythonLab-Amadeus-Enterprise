@@ -32,4 +32,14 @@ class AmadeusSDK:
         if not convert_to_json:
             return response.status_code, response
 
-        return response.status_code, json.dumps(xmltodict.parse(response.text))
+        return response.status_code, xmltodict.parse(response.text)
+
+    @staticmethod
+    def extract_session_id(data):
+        return data.get('soapenv:Envelope', {}).get('soapenv:Header', {}).get('awsse:Session', {}).get(
+            'awsse:SessionId')
+
+    @staticmethod
+    def extract_security_token(data):
+        return data.get('soapenv:Envelope', {}).get('soapenv:Header', {}).get('awsse:Session', {}).get(
+            'awsse:SecurityToken')

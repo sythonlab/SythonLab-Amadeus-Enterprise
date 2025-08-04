@@ -125,7 +125,7 @@ AVAILABILITY_QUERY = """
    </soapenv:Body>
 </soap:Envelope>"""
 
-INFORMATIVE_PRICING_WITHOUT_PNR = """
+INFORMATIVE_PRICING_WITHOUT_PNR_QUERY = """
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sec="http://xml.amadeus.com/2010/06/Security_v1" xmlns:typ="http://xml.amadeus.com/2010/06/Types_v1" xmlns:iat="http://www.iata.org/IATA/2007/00/IATA2010.1" xmlns:app="http://xml.amadeus.com/2010/06/AppMdw_CommonTypes_v3" xmlns:link="http://wsdl.amadeus.com/2010/06/ws/Link_v1" xmlns:ses="http://xml.amadeus.com/2010/06/Session_v3">
    <soapenv:Header xmlns:add="http://www.w3.org/2005/08/addressing">
         <add:MessageID>WbsConsu-{MESSAGE_ID}</add:MessageID>
@@ -241,6 +241,49 @@ INFORMATIVE_PRICING_WITHOUT_PNR = """
 		</carrierInformation>
 	</pricingOptionGroup>
       </Fare_InformativePricingWithoutPNR>
+   </soapenv:Body>
+</soapenv:Envelope>
+"""
+
+CHECK_RULES_QUERY = """
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sec="http://xml.amadeus.com/2010/06/Security_v1" xmlns:typ="http://xml.amadeus.com/2010/06/Types_v1" xmlns:iat="http://www.iata.org/IATA/2007/00/IATA2010.1" xmlns:app="http://xml.amadeus.com/2010/06/AppMdw_CommonTypes_v3" xmlns:link="http://wsdl.amadeus.com/2010/06/ws/Link_v1" xmlns:ses="http://xml.amadeus.com/2010/06/Session_v3">
+   <soapenv:Header xmlns:add="http://www.w3.org/2005/08/addressing">
+        <add:MessageID>{MESSAGE_ID}</add:MessageID>
+        <add:Action>{ACTION}</add:Action>
+        <add:To>{TO}</add:To>
+        <awsse:Session TransactionStatusCode="InSeries" xmlns:awsse="http://xml.amadeus.com/2010/06/Session_v3">
+            <awsse:SessionId>{SESSION_ID}</awsse:SessionId>
+            <awsse:SequenceNumber>{SEQUENCE_NUMBER}</awsse:SequenceNumber>
+            <awsse:SecurityToken>{SECURITY_TOKEN}</awsse:SecurityToken>
+        </awsse:Session>
+    </soapenv:Header>
+   <soapenv:Body>
+        <Fare_CheckRules>
+            <msgType>
+                <messageFunctionDetails>
+                    <messageFunction>712</messageFunction>
+                </messageFunctionDetails>
+            </msgType>
+            <itemNumber>
+                <itemNumberDetails>
+                    <number>1</number>
+                </itemNumberDetails>
+                <itemNumberDetails>
+                    <number>1</number>
+                    <type>FC</type>
+                </itemNumberDetails>
+            </itemNumber>
+            <fareRule>
+                <tarifFareRule>
+                    <ruleSectionId>PE</ruleSectionId>
+                    <ruleSectionId>MX</ruleSectionId>
+                    <ruleSectionId>SR</ruleSectionId>
+                    <ruleSectionId>TR</ruleSectionId>
+                    <ruleSectionId>AP</ruleSectionId>
+                    <ruleSectionId>FL</ruleSectionId>
+                </tarifFareRule>
+            </fareRule>
+        </Fare_CheckRules>
    </soapenv:Body>
 </soapenv:Envelope>
 """
