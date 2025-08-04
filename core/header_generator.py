@@ -3,10 +3,10 @@ import hashlib
 import os
 from datetime import datetime, timezone
 
+import settings
+
 
 class AmadeusHeaderGenerator:
-    username = 'WSCPJCAR'
-    office_id = 'KIN1S2312'
     message_id = None
     action = None
     to = None
@@ -31,7 +31,7 @@ class AmadeusHeaderGenerator:
 
     def generate_to(self, target):
         self.to = {
-            'availability': 'https://nodeD1.test.webservices.amadeus.com/1ASIWCARCPJ'
+            'availability': settings.AMADEUS_CONFIG['ENDPOINTS']['FLIGHT_AVAILABILITY'],
         }[target]
 
     def generate_nonce(self):
@@ -42,7 +42,7 @@ class AmadeusHeaderGenerator:
         self.created_at = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
 
     def generate_password_digest(self):
-        password_bytes = '6WbmmXZJGS?D'.encode('utf-8')
+        password_bytes = settings.AMADEUS_CONFIG['PASSWORD'].encode('utf-8')
         concatenated = self.nonce_bytes + self.created_at.encode('utf-8') + hashlib.sha1(password_bytes).digest()
         digest = hashlib.sha1(concatenated).digest()
         self.password_digest = base64.b64encode(digest).decode('utf-8')
