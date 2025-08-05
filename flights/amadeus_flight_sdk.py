@@ -1,7 +1,8 @@
 import settings
 from core.amadeus_sdk import AmadeusSDK
 from core.header_generator import AmadeusHeaderGenerator
-from flights.queries import AVAILABILITY_QUERY, INFORMATIVE_PRICING_WITHOUT_PNR_QUERY, CHECK_RULES_QUERY
+from flights.queries import FLIGHT_AVAILABILITY_QUERY, FLIGHT_INFORMATIVE_PRICING_WITHOUT_PNR_QUERY, \
+    FLIGHT_CHECK_RULES_QUERY, FLIGHT_SIGNOUT_QUERY
 
 
 class AmadeusFlightSDK:
@@ -12,7 +13,7 @@ class AmadeusFlightSDK:
 
         return AmadeusSDK.execute(
             settings.AMADEUS_CONFIG['ENDPOINT'],
-            AVAILABILITY_QUERY.format(
+            FLIGHT_AVAILABILITY_QUERY.format(
                 MESSAGE_ID=headers.message_id,
                 USERNAME=settings.AMADEUS_CONFIG['USERNAME'],
                 OFFICE_ID=settings.AMADEUS_CONFIG['OFFICE_ID'],
@@ -34,7 +35,7 @@ class AmadeusFlightSDK:
 
         return AmadeusSDK.execute(
             settings.AMADEUS_CONFIG['ENDPOINT'],
-            INFORMATIVE_PRICING_WITHOUT_PNR_QUERY.format(
+            FLIGHT_INFORMATIVE_PRICING_WITHOUT_PNR_QUERY.format(
                 MESSAGE_ID=headers.message_id,
                 USERNAME=settings.AMADEUS_CONFIG['USERNAME'],
                 OFFICE_ID=settings.AMADEUS_CONFIG['OFFICE_ID'],
@@ -49,14 +50,14 @@ class AmadeusFlightSDK:
             },
         )
 
-    def check_rules(self, session_id, security_token):
+    def check_rules(self, session_id, security_token, sequence_number=2):
         action = 'http://webservices.amadeus.com/FARQNQ_07_1_1A'
         headers = AmadeusHeaderGenerator()
         headers.generate_header()
 
         return AmadeusSDK.execute(
             settings.AMADEUS_CONFIG['ENDPOINT'],
-            CHECK_RULES_QUERY.format(
+            FLIGHT_CHECK_RULES_QUERY.format(
                 MESSAGE_ID=headers.message_id,
                 USERNAME=settings.AMADEUS_CONFIG['USERNAME'],
                 OFFICE_ID=settings.AMADEUS_CONFIG['OFFICE_ID'],
@@ -65,7 +66,27 @@ class AmadeusFlightSDK:
                 CREATED_AT=headers.created_at,
                 TO=settings.AMADEUS_CONFIG['ENDPOINT'],
                 ACTION=action,
-                SEQUENCE_NUMBER=2,
+                SEQUENCE_NUMBER=sequence_number,
+                SECURITY_TOKEN=security_token,
+                SESSION_ID=session_id,
+            ),
+            http_headers={
+                'SOAPAction': action
+            },
+        )
+
+    def logout(self, session_id, security_token, sequence_number=3):
+        action = 'http://webservices.amadeus.com/VLSSOQ_04_1_1A'
+        headers = AmadeusHeaderGenerator()
+        headers.generate_header()
+
+        return AmadeusSDK.execute(
+            settings.AMADEUS_CONFIG['ENDPOINT'],
+            FLIGHT_SIGNOUT_QUERY.format(
+                MESSAGE_ID=headers.message_id,
+                TO=settings.AMADEUS_CONFIG['ENDPOINT'],
+                ACTION=action,
+                SEQUENCE_NUMBER=sequence_number,
                 SECURITY_TOKEN=security_token,
                 SESSION_ID=session_id,
             ),

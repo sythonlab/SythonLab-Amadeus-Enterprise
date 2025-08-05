@@ -16,3 +16,7 @@ if availability_status == 200:
 
         check_rules_status, check_rules = sdk.check_rules(session_id, security_token)
         print('CHECK RULES', check_rules_status, check_rules)
+
+        if check_rules_status == 200:
+            logout_status, logout = sdk.logout(session_id, security_token)
+            print('LOGOUT', logout_status, logout)
