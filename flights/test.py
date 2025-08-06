@@ -24,3 +24,10 @@ if availability_status == 200:
             if logout_status == 200:
                 reserve_status, reserve = sdk.reserve()
                 print('RESERVE', reserve_status, reserve)
+
+                if reserve_status == 200:
+                    session_id = AmadeusSDK.extract_session_id(reserve)
+                    security_token = AmadeusSDK.extract_security_token(reserve)
+
+                    add_pax_status, add_pax = sdk.add_passengers(session_id, security_token)
+                    print('ADD PAX', add_pax_status, add_pax)
