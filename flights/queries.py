@@ -594,3 +594,44 @@ FLIGHT_ADD_PASSENGERS_QUERY = """
        </soapenv:Body>
     </soapenv:Envelope>
 """
+
+ADD_CASH_PAYMENT_QUERY = """
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sec="http://xml.amadeus.com/2010/06/Security_v1" xmlns:link="http://wsdl.amadeus.com/2010/06/ws/Link_v1" xmlns:ses="http://xml.amadeus.com/2010/06/Session_v3" xmlns:tfop="http://xml.amadeus.com/TFOPCQ_19_2_1A">
+       <soapenv:Header xmlns:add="http://www.w3.org/2005/08/addressing">
+           <add:MessageID>{MESSAGE_ID}</add:MessageID>
+           <add:Action>{ACTION}</add:Action>
+           <add:To>{TO}</add:To>
+           <awsse:Session TransactionStatusCode="InSeries" xmlns:awsse="http://xml.amadeus.com/2010/06/Session_v3">
+               <awsse:SessionId>{SESSION_ID}</awsse:SessionId>
+               <awsse:SequenceNumber>{SEQUENCE_NUMBER}</awsse:SequenceNumber>
+               <awsse:SecurityToken>{SECURITY_TOKEN}</awsse:SecurityToken>
+           </awsse:Session>
+       </soapenv:Header>
+       <soapenv:Body>     
+        <FOP_CreateFormOfPayment>
+          <transactionContext>
+            <transactionDetails>
+              <code>FP</code>
+            </transactionDetails>
+          </transactionContext>
+          <fopGroup>
+            <fopReference/>
+            <mopDescription>
+              <fopSequenceNumber>
+                <sequenceDetails>
+                  <number>1</number>
+                </sequenceDetails>
+              </fopSequenceNumber>
+              <mopDetails>
+                <fopPNRDetails>
+                  <fopDetails>
+                    <fopCode>CASH</fopCode>
+                  </fopDetails>
+                </fopPNRDetails>
+              </mopDetails>
+            </mopDescription>
+          </fopGroup>
+        </FOP_CreateFormOfPayment>
+       </soapenv:Body>
+    </soapenv:Envelope>
+"""

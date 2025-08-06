@@ -31,3 +31,10 @@ if availability_status == 200:
 
                     add_pax_status, add_pax = sdk.add_passengers(session_id, security_token)
                     print('ADD PAX', add_pax_status, add_pax)
+
+                    if add_pax_status == 200:
+                        session_id = AmadeusSDK.extract_session_id(add_pax)
+                        security_token = AmadeusSDK.extract_security_token(add_pax)
+
+                        cash_status, cash = sdk.add_cash_payment(session_id, security_token)
+                        print('CASH', cash_status, cash)

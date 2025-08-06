@@ -2,7 +2,8 @@ import settings
 from core.amadeus_sdk import AmadeusSDK
 from core.header_generator import AmadeusHeaderGenerator
 from flights.queries import FLIGHT_AVAILABILITY_QUERY, FLIGHT_INFORMATIVE_PRICING_WITHOUT_PNR_QUERY, \
-    FLIGHT_CHECK_RULES_QUERY, FLIGHT_SIGNOUT_QUERY, FLIGHT_RESERVE_QUERY, FLIGHT_ADD_PASSENGERS_QUERY
+    FLIGHT_CHECK_RULES_QUERY, FLIGHT_SIGNOUT_QUERY, FLIGHT_RESERVE_QUERY, FLIGHT_ADD_PASSENGERS_QUERY, \
+    ADD_CASH_PAYMENT_QUERY
 
 
 class AmadeusFlightSDK:
@@ -125,6 +126,27 @@ class AmadeusFlightSDK:
         return AmadeusSDK.execute(
             settings.AMADEUS_CONFIG['ENDPOINT'],
             FLIGHT_ADD_PASSENGERS_QUERY.format(
+                MESSAGE_ID=headers.message_id,
+                TO=settings.AMADEUS_CONFIG['ENDPOINT'],
+                ACTION=action,
+                SEQUENCE_NUMBER=sequence_number,
+                SECURITY_TOKEN=security_token,
+                SESSION_ID=session_id,
+                OFFICE_ID=settings.AMADEUS_CONFIG['OFFICE_ID'],
+            ),
+            http_headers={
+                'SOAPAction': action
+            },
+        )
+
+    def add_cash_payment(self, session_id, security_token, sequence_number=2):
+        action = 'http://webservices.amadeus.com/TFOPCQ_19_2_1A'
+        headers = AmadeusHeaderGenerator()
+        headers.generate_header()
+
+        return AmadeusSDK.execute(
+            settings.AMADEUS_CONFIG['ENDPOINT'],
+            ADD_CASH_PAYMENT_QUERY.format(
                 MESSAGE_ID=headers.message_id,
                 TO=settings.AMADEUS_CONFIG['ENDPOINT'],
                 ACTION=action,
