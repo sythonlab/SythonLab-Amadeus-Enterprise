@@ -97,7 +97,7 @@ FLIGHT_AVAILABILITY_QUERY = """
                 </arrivalLocalization>
                 <timeDetails>
                    <firstDateTimeDetail>
-                      <date>300825</date>
+                      <date>130825</date>
                    </firstDateTimeDetail>
                 </timeDetails>
              </itinerary>
@@ -117,7 +117,7 @@ FLIGHT_AVAILABILITY_QUERY = """
                 </arrivalLocalization>
                 <timeDetails>
                    <firstDateTimeDetail>
-                      <date>040925</date>
+                      <date>200825</date>
                    </firstDateTimeDetail>
                 </timeDetails>
              </itinerary>
@@ -169,8 +169,8 @@ FLIGHT_INFORMATIVE_PRICING_WITHOUT_PNR_QUERY = """
              <segmentGroup>
                 <segmentInformation>
                    <flightDate>
-                      <departureDate>300825</departureDate>
-                      <departureTime>2350</departureTime>
+                      <departureDate>130825</departureDate>
+                      <departureTime>2250</departureTime>
                    </flightDate>
                    <boardPointDetails>
                       <trueLocationId>HAV</trueLocationId>
@@ -183,7 +183,7 @@ FLIGHT_INFORMATIVE_PRICING_WITHOUT_PNR_QUERY = """
                    </companyDetails>
                    <flightIdentification>
                       <flightNumber>470</flightNumber>
-                      <bookingClass>X</bookingClass>
+                      <bookingClass>K</bookingClass>
                    </flightIdentification>
                    <flightTypeDetails>
                       <flightIndicator>1</flightIndicator>
@@ -194,7 +194,7 @@ FLIGHT_INFORMATIVE_PRICING_WITHOUT_PNR_QUERY = """
              <segmentGroup>
                 <segmentInformation>
                    <flightDate>
-                      <departureDate>040925</departureDate>
+                      <departureDate>200825</departureDate>
                       <departureTime>1945</departureTime>
                    </flightDate>
                    <boardPointDetails>
@@ -208,7 +208,7 @@ FLIGHT_INFORMATIVE_PRICING_WITHOUT_PNR_QUERY = """
                    </companyDetails>
                    <flightIdentification>
                       <flightNumber>471</flightNumber>
-                      <bookingClass>X</bookingClass>
+                      <bookingClass>R</bookingClass>
                    </flightIdentification>
                    <flightTypeDetails>
                       <flightIndicator>2</flightIndicator>
@@ -303,6 +303,108 @@ FLIGHT_SIGNOUT_QUERY = """
         </soapenv:Header>
        <soapenv:Body>
           <Security_SignOut></Security_SignOut>
+       </soapenv:Body>
+    </soapenv:Envelope>
+"""
+
+FLIGHT_RESERVE_QUERY = """
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sec="http://xml.amadeus.com/2010/06/Security_v1" xmlns:typ="http://xml.amadeus.com/2010/06/Types_v1" xmlns:iat="http://www.iata.org/IATA/2007/00/IATA2010.1" xmlns:app="http://xml.amadeus.com/2010/06/AppMdw_CommonTypes_v3" xmlns:link="http://wsdl.amadeus.com/2010/06/ws/Link_v1" xmlns:ses="http://xml.amadeus.com/2010/06/Session_v3">
+       <soapenv:Header xmlns:add="http://www.w3.org/2005/08/addressing">
+            <add:MessageID>{MESSAGE_ID}</add:MessageID>
+            <add:Action>{ACTION}</add:Action>
+            <add:To>{TO}</add:To>
+            <oas:Security xmlns:oas="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:oas1="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+                <oas:UsernameToken oas1:Id="UsernameToken-1">
+                    <oas:Username>{USERNAME}</oas:Username>
+                    <oas:Nonce EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary">{NONCE}</oas:Nonce>
+                    <oas:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest">{PASSWORD_DIGEST}</oas:Password>
+                    <oas1:Created>{CREATED_AT}</oas1:Created>
+                </oas:UsernameToken>
+            </oas:Security>
+            <AMA_SecurityHostedUser xmlns="http://xml.amadeus.com/2010/06/Security_v1">
+                <UserID AgentDutyCode="SU" RequestorType="U" PseudoCityCode="{OFFICE_ID}" POS_Type="1"/>
+            </AMA_SecurityHostedUser>
+            <awsse:Session TransactionStatusCode="Start" xmlns:awsse="http://xml.amadeus.com/2010/06/Session_v3"/>
+        </soapenv:Header>
+       <soapenv:Body>
+          <Air_SellFromRecommendation>
+             <messageActionDetails>
+                <messageFunctionDetails>
+                   <messageFunction>183</messageFunction>
+                   <additionalMessageFunction>M1</additionalMessageFunction>
+                </messageFunctionDetails>
+             </messageActionDetails>
+             <itineraryDetails>
+                <originDestinationDetails>
+                   <origin>HAV</origin>
+                   <destination>SCU</destination>
+                </originDestinationDetails>
+                <message>
+                   <messageFunctionDetails>
+                      <messageFunction>183</messageFunction>
+                   </messageFunctionDetails>
+                </message>
+                <segmentInformation>
+                   <travelProductInformation>
+                      <flightDate>
+                         <departureDate>130825</departureDate>
+                      </flightDate>
+                      <boardPointDetails>
+                         <trueLocationId>HAV</trueLocationId>
+                      </boardPointDetails>
+                      <offpointDetails>
+                         <trueLocationId>SCU</trueLocationId>
+                      </offpointDetails>
+                      <companyDetails>
+                         <marketingCompany>CU</marketingCompany>
+                      </companyDetails>
+                      <flightIdentification>
+                         <flightNumber>470</flightNumber>
+                         <bookingClass>K</bookingClass>
+                      </flightIdentification>
+                   </travelProductInformation>
+                   <relatedproductInformation>
+                      <quantity>2</quantity>
+                      <statusCode>NN</statusCode>
+                   </relatedproductInformation>
+                </segmentInformation>
+             </itineraryDetails>
+             <itineraryDetails>
+                <originDestinationDetails>
+                   <origin>SCU</origin>
+                   <destination>HAV</destination>
+                </originDestinationDetails>
+                <message>
+                   <messageFunctionDetails>
+                      <messageFunction>183</messageFunction>
+                   </messageFunctionDetails>
+                </message>
+                <segmentInformation>
+                   <travelProductInformation>
+                      <flightDate>
+                         <departureDate>200825</departureDate>
+                      </flightDate>
+                      <boardPointDetails>
+                         <trueLocationId>SCU</trueLocationId>
+                      </boardPointDetails>
+                      <offpointDetails>
+                         <trueLocationId>HAV</trueLocationId>
+                      </offpointDetails>
+                      <companyDetails>
+                         <marketingCompany>CU</marketingCompany>
+                      </companyDetails>
+                      <flightIdentification>
+                         <flightNumber>471</flightNumber>
+                         <bookingClass>R</bookingClass>
+                      </flightIdentification>
+                   </travelProductInformation>
+                   <relatedproductInformation>
+                      <quantity>2</quantity>
+                      <statusCode>NN</statusCode>
+                   </relatedproductInformation>
+                </segmentInformation>
+             </itineraryDetails>
+          </Air_SellFromRecommendation>
        </soapenv:Body>
     </soapenv:Envelope>
 """
