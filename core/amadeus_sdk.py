@@ -41,3 +41,8 @@ class AmadeusSDK:
     def extract_security_token(data):
         return data.get('soapenv:Envelope', {}).get('soapenv:Header', {}).get('awsse:Session', {}).get(
             'awsse:SecurityToken')
+
+    @staticmethod
+    def extract_pnr_from_ticket_generator(data):
+        return data.get('soapenv:Envelope', {}).get('soapenv:Body', {}).get('PNR_Reply', {}).get(
+            'pnrHeader', {}).get('reservationInfo', {}).get('reservation', {}).get('controlNumber')

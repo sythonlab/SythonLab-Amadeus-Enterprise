@@ -60,3 +60,16 @@ if availability_status == 200:
 
                                     add_multi_status, add_multi = sdk.pnr_add_multielements(session_id, security_token)
                                     print('ADD MULTIELEMENTS (LOCATOR)', add_multi_status, add_multi)
+
+                                    if add_multi_status == 200:
+                                        session_id = AmadeusSDK.extract_session_id(add_multi)
+                                        security_token = AmadeusSDK.extract_security_token(add_multi)
+
+                                        logout_status, logout = sdk.logout(session_id, security_token,
+                                                                           sequence_number=6)
+                                        print('LOGOUT', logout_status, logout)
+
+                                        if logout_status == 200:
+                                            pnr_code = AmadeusSDK.extract_pnr_from_ticket_generator(add_multi)
+                                            pnr_status, pnr = sdk.pnr_retrieve(pnr_code)
+                                            print('PNR', pnr_status, pnr)
