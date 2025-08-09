@@ -777,3 +777,66 @@ PNR_RETRIEVE_QUERY = """
        </soapenv:Body>
     </soapenv:Envelope>
 """
+
+ISSUE_TICKET_QUERY = """
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sec="http://xml.amadeus.com/2010/06/Security_v1" xmlns:typ="http://xml.amadeus.com/2010/06/Types_v1" xmlns:iat="http://www.iata.org/IATA/2007/00/IATA2010.1" xmlns:app="http://xml.amadeus.com/2010/06/AppMdw_CommonTypes_v3" xmlns:link="http://wsdl.amadeus.com/2010/06/ws/Link_v1" xmlns:ses="http://xml.amadeus.com/2010/06/Session_v3">
+       <soapenv:Header xmlns:add="http://www.w3.org/2005/08/addressing">
+        <add:MessageID>{MESSAGE_ID}</add:MessageID>
+        <add:Action>{ACTION}</add:Action>
+        <add:To>{TO}</add:To>
+        <awsse:Session TransactionStatusCode="InSeries" xmlns:awsse="http://xml.amadeus.com/2010/06/Session_v3">
+            <awsse:SessionId>{SESSION_ID}</awsse:SessionId>
+            <awsse:SequenceNumber>{SEQUENCE_NUMBER}</awsse:SequenceNumber>
+            <awsse:SecurityToken>{SECURITY_TOKEN}</awsse:SecurityToken>
+        </awsse:Session>
+    </soapenv:Header>
+       <soapenv:Body>
+          <DocIssuance_IssueTicket>
+            <optionGroup>
+               <switches>
+                <statusDetails>
+                    <indicator>ET</indicator>
+                </statusDetails>
+               </switches>
+            </optionGroup>         
+             <optionGroup>
+                <switches>
+                   <statusDetails>
+                      <indicator>RT</indicator>
+                   </statusDetails>
+                </switches>
+             </optionGroup>
+             <otherCompoundOptions>
+                    <attributeDetails>
+                        <attributeType>ETC</attributeType>
+                            <attributeDescription>CU</attributeDescription>
+                    </attributeDetails>
+                </otherCompoundOptions>         		
+          </DocIssuance_IssueTicket>
+       </soapenv:Body>
+    </soapenv:Envelope>
+"""
+
+PNR_RETRIEVE_ISSUED_QUERY = """
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sec="http://xml.amadeus.com/2010/06/Security_v1" xmlns:typ="http://xml.amadeus.com/2010/06/Types_v1" xmlns:iat="http://www.iata.org/IATA/2007/00/IATA2010.1" xmlns:app="http://xml.amadeus.com/2010/06/AppMdw_CommonTypes_v3" xmlns:link="http://wsdl.amadeus.com/2010/06/ws/Link_v1" xmlns:ses="http://xml.amadeus.com/2010/06/Session_v3">
+       <soapenv:Header xmlns:add="http://www.w3.org/2005/08/addressing">
+        <add:MessageID>{MESSAGE_ID}</add:MessageID>
+        <add:Action>{ACTION}</add:Action>
+        <add:To>{TO}</add:To>
+        <awsse:Session TransactionStatusCode="InSeries" xmlns:awsse="http://xml.amadeus.com/2010/06/Session_v3">
+            <awsse:SessionId>{SESSION_ID}</awsse:SessionId>
+            <awsse:SequenceNumber>{SEQUENCE_NUMBER}</awsse:SequenceNumber>
+            <awsse:SecurityToken>{SECURITY_TOKEN}</awsse:SecurityToken>
+        </awsse:Session>
+    </soapenv:Header>
+       <soapenv:Body>
+          <PNR_Retrieve>
+              <retrievalFacts>
+                <retrieve>
+                   <type>1</type>
+                </retrieve>
+             </retrievalFacts>
+          </PNR_Retrieve>
+       </soapenv:Body>
+    </soapenv:Envelope>
+"""

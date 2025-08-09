@@ -73,3 +73,23 @@ if availability_status == 200:
                                             pnr_code = AmadeusSDK.extract_pnr_from_ticket_generator(add_multi)
                                             pnr_status, pnr = sdk.pnr_retrieve(pnr_code)
                                             print('PNR', pnr_status, pnr)
+
+                                            if pnr_status == 200:
+                                                session_id = AmadeusSDK.extract_session_id(pnr)
+                                                security_token = AmadeusSDK.extract_security_token(pnr)
+
+                                                issue_status, issue = sdk.issue_ticket(session_id, security_token)
+                                                print('ISSUE', issue_status, issue)
+
+                                                if issue_status == 200:
+                                                    session_id = AmadeusSDK.extract_session_id(issue)
+                                                    security_token = AmadeusSDK.extract_security_token(issue)
+
+                                                    pnr_status, pnr = sdk.pnr_retrieve_issued(session_id,
+                                                                                              security_token)
+                                                    print('PNR ISSUED', pnr_status, pnr)
+
+                                                    if pnr_status == 200:
+                                                        logout_status, logout = sdk.logout(session_id, security_token,
+                                                                                           sequence_number=4)
+                                                        print('LOGOUT', logout_status, logout)

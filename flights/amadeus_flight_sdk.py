@@ -4,7 +4,7 @@ from core.header_generator import AmadeusHeaderGenerator
 from flights.queries import FLIGHT_AVAILABILITY_QUERY, FLIGHT_INFORMATIVE_PRICING_WITHOUT_PNR_QUERY, \
     FLIGHT_CHECK_RULES_QUERY, FLIGHT_SIGNOUT_QUERY, FLIGHT_RESERVE_QUERY, FLIGHT_ADD_PASSENGERS_QUERY, \
     ADD_CASH_PAYMENT_QUERY, FARE_PRICE_PNR_WITH_BOOKING_CLASS_QUERY, TICKET_CREATE_TST_FROM_PRICING_QUERY, \
-    PNR_ADD_MULTIELEMENTS_QUERY, PNR_RETRIEVE_QUERY
+    PNR_ADD_MULTIELEMENTS_QUERY, PNR_RETRIEVE_QUERY, ISSUE_TICKET_QUERY, PNR_RETRIEVE_ISSUED_QUERY
 
 
 class AmadeusFlightSDK:
@@ -239,6 +239,47 @@ class AmadeusFlightSDK:
                 TO=settings.AMADEUS_CONFIG['ENDPOINT'],
                 LOCATOR=locator,
                 ACTION=action
+            ),
+            http_headers={
+                'SOAPAction': action
+            },
+            show_traces=True
+        )
+
+    def issue_ticket(self, session_id, security_token, sequence_number=2):
+        action = 'http://webservices.amadeus.com/TTKTIQ_15_1_1A'
+        headers = AmadeusHeaderGenerator()
+        headers.generate_header()
+
+        return AmadeusSDK.execute(
+            settings.AMADEUS_CONFIG['ENDPOINT'],
+            ISSUE_TICKET_QUERY.format(
+                MESSAGE_ID=headers.message_id,
+                TO=settings.AMADEUS_CONFIG['ENDPOINT'],
+                ACTION=action,
+                SEQUENCE_NUMBER=sequence_number,
+                SECURITY_TOKEN=security_token,
+                SESSION_ID=session_id,
+            ),
+            http_headers={
+                'SOAPAction': action
+            },
+        )
+
+    def pnr_retrieve_issued(self, session_id, security_token, sequence_number=3):
+        action = 'http://webservices.amadeus.com/PNRRET_21_1_1A'
+        headers = AmadeusHeaderGenerator()
+        headers.generate_header()
+
+        return AmadeusSDK.execute(
+            settings.AMADEUS_CONFIG['ENDPOINT'],
+            PNR_RETRIEVE_ISSUED_QUERY.format(
+                MESSAGE_ID=headers.message_id,
+                TO=settings.AMADEUS_CONFIG['ENDPOINT'],
+                ACTION=action,
+                SEQUENCE_NUMBER=sequence_number,
+                SECURITY_TOKEN=security_token,
+                SESSION_ID=session_id,
             ),
             http_headers={
                 'SOAPAction': action
