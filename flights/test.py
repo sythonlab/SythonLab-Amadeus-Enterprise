@@ -46,3 +46,10 @@ if availability_status == 200:
                             price_pnr_status, price_pnr = sdk.fare_price_pnr_with_booking_class(session_id,
                                                                                                 security_token)
                             print('PRICE PNR WITH BOOKING CLASS', price_pnr_status, price_pnr)
+
+                            if price_pnr_status == 200:
+                                session_id = AmadeusSDK.extract_session_id(price_pnr)
+                                security_token = AmadeusSDK.extract_security_token(price_pnr)
+
+                                tst_status, tst = sdk.ticket_create_tst_from_pricing(session_id, security_token)
+                                print('TICKET TST FROM PRICING', tst_status, tst)
