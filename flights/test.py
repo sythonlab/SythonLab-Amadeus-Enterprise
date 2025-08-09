@@ -38,3 +38,11 @@ if availability_status == 200:
 
                         cash_status, cash = sdk.add_cash_payment(session_id, security_token)
                         print('CASH', cash_status, cash)
+
+                        if cash_status == 200:
+                            session_id = AmadeusSDK.extract_session_id(cash)
+                            security_token = AmadeusSDK.extract_security_token(cash)
+
+                            price_pnr_status, price_pnr = sdk.fare_price_pnr_with_booking_class(session_id,
+                                                                                                security_token)
+                            print('PRICE PNR WITH BOOKING CLASS', price_pnr_status, price_pnr)
