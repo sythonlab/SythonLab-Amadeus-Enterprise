@@ -704,3 +704,40 @@ TICKET_CREATE_TST_FROM_PRICING_QUERY = """
        </soapenv:Body>
     </soapenv:Envelope>
 """
+
+PNR_ADD_MULTIELEMENTS_QUERY = """
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sec="http://xml.amadeus.com/2010/06/Security_v1" xmlns:typ="http://xml.amadeus.com/2010/06/Types_v1" xmlns:iat="http://www.iata.org/IATA/2007/00/IATA2010.1" xmlns:app="http://xml.amadeus.com/2010/06/AppMdw_CommonTypes_v3" xmlns:link="http://wsdl.amadeus.com/2010/06/ws/Link_v1" xmlns:ses="http://xml.amadeus.com/2010/06/Session_v3">
+       <soapenv:Header xmlns:add="http://www.w3.org/2005/08/addressing">
+        <add:MessageID>{MESSAGE_ID}</add:MessageID>
+        <add:Action>{ACTION}</add:Action>
+        <add:To>{TO}</add:To>
+        <awsse:Session TransactionStatusCode="InSeries" xmlns:awsse="http://xml.amadeus.com/2010/06/Session_v3">
+            <awsse:SessionId>{SESSION_ID}</awsse:SessionId>
+            <awsse:SequenceNumber>{SEQUENCE_NUMBER}</awsse:SequenceNumber>
+            <awsse:SecurityToken>{SECURITY_TOKEN}</awsse:SecurityToken>
+        </awsse:Session>
+    </soapenv:Header>
+       <soapenv:Body>
+          <PNR_AddMultiElements>
+             <pnrActions>
+                <optionCode>10</optionCode>
+             </pnrActions>
+             <dataElementsMaster>
+                <marker1/>
+                <dataElementsIndiv>
+                   <elementManagementData>
+                      <segmentName>RF</segmentName>
+                   </elementManagementData>
+                   <freetextData>
+                      <freetextDetail>
+                         <subjectQualifier>3</subjectQualifier>
+                         <type>P22</type>
+                      </freetextDetail>
+                      <longFreetext>{OFFICE_ID}</longFreetext>
+                   </freetextData>
+                </dataElementsIndiv>
+             </dataElementsMaster>
+          </PNR_AddMultiElements>
+       </soapenv:Body>
+    </soapenv:Envelope>
+"""

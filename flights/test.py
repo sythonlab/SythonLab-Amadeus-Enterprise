@@ -53,3 +53,10 @@ if availability_status == 200:
 
                                 tst_status, tst = sdk.ticket_create_tst_from_pricing(session_id, security_token)
                                 print('TICKET TST FROM PRICING', tst_status, tst)
+
+                                if tst_status == 200:
+                                    session_id = AmadeusSDK.extract_session_id(tst)
+                                    security_token = AmadeusSDK.extract_security_token(tst)
+
+                                    add_multi_status, add_multi = sdk.pnr_add_multielements(session_id, security_token)
+                                    print('ADD MULTIELEMENTS (LOCATOR)', add_multi_status, add_multi)
