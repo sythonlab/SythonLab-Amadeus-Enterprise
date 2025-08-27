@@ -59,7 +59,7 @@ if availability_status == 200:
                                     security_token = AmadeusSDK.extract_security_token(tst)
 
                                     add_multi_status, add_multi = sdk.pnr_add_multielements(session_id, security_token)
-                                    print('ADD MULTIELEMENTS (LOCATOR)', add_multi_status, add_multi)
+                                    print('ADD MULTIELEMENTS (PNR)', add_multi_status, add_multi)
 
                                     if add_multi_status == 200:
                                         session_id = AmadeusSDK.extract_session_id(add_multi)
