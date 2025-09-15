@@ -10,6 +10,7 @@ pytz==2025.2
 requests==2.32.4
 requests-file==2.1.0
 requests-toolbelt==1.0.0
+setuptools==80.9.0
 urllib3==2.5.0
 xmltodict==0.14.2
 zeep==4.3.1
