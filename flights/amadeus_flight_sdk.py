@@ -1,14 +1,19 @@
+from typing import List
+
 import settings
 from core.amadeus_sdk import AmadeusSDK
 from core.header_generator import AmadeusHeaderGenerator
-from flights.queries import FLIGHT_AVAILABILITY_QUERY, FLIGHT_INFORMATIVE_PRICING_WITHOUT_PNR_QUERY, \
+from flights.data_classes import AvailabilityPassenger, AvailabilityItinerary
+from flights.queries import get_flight_availability_query, FLIGHT_INFORMATIVE_PRICING_WITHOUT_PNR_QUERY, \
     FLIGHT_CHECK_RULES_QUERY, FLIGHT_SIGNOUT_QUERY, FLIGHT_RESERVE_QUERY, FLIGHT_ADD_PASSENGERS_QUERY, \
     ADD_CASH_PAYMENT_QUERY, FARE_PRICE_PNR_WITH_BOOKING_CLASS_QUERY, TICKET_CREATE_TST_FROM_PRICING_QUERY, \
     PNR_ADD_MULTIELEMENTS_QUERY, PNR_RETRIEVE_QUERY, ISSUE_TICKET_QUERY, PNR_RETRIEVE_ISSUED_QUERY
 
 
 class AmadeusFlightSDK:
-    def get_availability(self):
+
+    @staticmethod
+    def get_availability(passengers: List[AvailabilityPassenger], itinerary: List[AvailabilityItinerary]):
         """
            Retrieve flight availability with minimum prices using the
            Amadeus SOAP service.
@@ -27,15 +32,14 @@ class AmadeusFlightSDK:
 
         return AmadeusSDK.execute(
             settings.AMADEUS_CONFIG['ENDPOINT'],
-            FLIGHT_AVAILABILITY_QUERY.format(
-                MESSAGE_ID=headers.message_id,
-                USERNAME=settings.AMADEUS_CONFIG['USERNAME'],
-                OFFICE_ID=settings.AMADEUS_CONFIG['OFFICE_ID'],
-                NONCE=headers.nonce,
-                PASSWORD_DIGEST=headers.password_digest,
-                CREATED_AT=headers.created_at,
-                TO=settings.AMADEUS_CONFIG['ENDPOINT'],
-                ACTION=action
+            get_flight_availability_query(
+                message_id=headers.message_id,
+                nonce=headers.nonce,
+                password_digest=headers.password_digest,
+                created_at=headers.created_at,
+                action=action,
+                passengers=passengers,
+                itinerary=itinerary,
             ),
             http_headers={
                 'SOAPAction': action

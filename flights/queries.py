@@ -1,130 +1,149 @@
-FLIGHT_AVAILABILITY_QUERY = """
-    <soap:Envelope 
-        xmlns:soap="http://www.w3.org/2003/05/soap-envelope"
-        xmlns:wss="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
-        xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
-        xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" 
-        xmlns:sec="http://xml.amadeus.com/2010/06/Security_v1" 
-        xmlns:typ="http://xml.amadeus.com/2010/06/Types_v1" 
-        xmlns:iat="http://www.iata.org/IATA/2007/00/IATA2010.1" 
-        xmlns:app="http://xml.amadeus.com/2010/06/AppMdw_CommonTypes_v3" 
-        xmlns:link="http://wsdl.amadeus.com/2010/06/ws/Link_v1" 
-        xmlns:ses="http://xml.amadeus.com/2010/06/Session_v3">
-    
-       <soapenv:Header xmlns:add="http://www.w3.org/2005/08/addressing">
-          <add:MessageID>WbsConsu-{MESSAGE_ID}</add:MessageID>
-          <add:Action>{ACTION}</add:Action>
-          <add:To>{TO}</add:To>
-          <oas:Security xmlns:oas="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
-                        xmlns:oas1="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
-             <oas:UsernameToken oas1:Id="UsernameToken-1">
-                <oas:Username>{USERNAME}</oas:Username>
-                <oas:Nonce EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary">
-                    {NONCE}
-                </oas:Nonce>
-                <oas:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest">
-                    {PASSWORD_DIGEST}
-                </oas:Password>
-                <oas1:Created>{CREATED_AT}</oas1:Created>
-            </oas:UsernameToken>
-          </oas:Security>
-          <AMA_SecurityHostedUser xmlns="http://xml.amadeus.com/2010/06/Security_v1">
-             <UserID AgentDutyCode="SU" RequestorType="U" PseudoCityCode="KIN1S2312" POS_Type="1"/>
-          </AMA_SecurityHostedUser>
-          <awsse:Session TransactionStatusCode="Start"
-             xmlns:awsse="http://xml.amadeus.com/2010/06/Session_v3"/>
-        </soapenv:Header>
-    
-       <soapenv:Body>
-          <Fare_MasterPricerTravelBoardSearch>
-             <numberOfUnit>
-                <unitNumberDetail>
-                   <numberOfUnits>2</numberOfUnits>
-                   <typeOfUnit>PX</typeOfUnit>
-                </unitNumberDetail>
-                <unitNumberDetail>
-                   <numberOfUnits>100</numberOfUnits>
-                   <typeOfUnit>RC</typeOfUnit>
-                </unitNumberDetail>
-             </numberOfUnit>
-             <paxReference>
+from typing import List
+
+import settings
+from flights.data_classes import AvailabilityItinerary, AvailabilityPassenger
+
+
+def get_flight_availability_query(
+        message_id, action, nonce, password_digest, created_at,
+        passengers: List[AvailabilityPassenger],
+        itinerary: List[AvailabilityItinerary]
+):
+    traveller_xml = lambda travellers, is_infant=False: ''.join(
+        [f"<traveller><ref>{i + 1}</ref>{'<infantIndicator>1</infantIndicator>' if is_infant else ''}</traveller>"
+         for i, pax in enumerate(travellers)]
+    )
+
+    passengers_query = ''
+    adults = list(filter(lambda x: x.type == 'adult', passengers))
+    children = list(filter(lambda x: x.type == 'child', passengers))
+    infants = list(filter(lambda x: x.type == 'infant', passengers))
+
+    if adults:
+        passengers_query += f"""
+            <paxReference>
                 <ptc>ADT</ptc>
-                <traveller>
-                   <ref>1</ref>
-                </traveller>
-                <traveller>
-                   <ref>2</ref>
-                </traveller>
-             </paxReference>
-             <fareOptions>
-                <pricingTickInfo>
-                   <pricingTicketing>
-                      <priceType>ET</priceType>
-                      <priceType>RP</priceType>
-                      <priceType>RU</priceType>
-                      <priceType>TAC</priceType>
-                      <priceType>XND</priceType>
-                      <priceType>XLA</priceType>
-                      <priceType>XLO</priceType>
-                      <priceType>XLC</priceType>
-                      <priceType>XND</priceType>
-                   </pricingTicketing>
-                </pricingTickInfo>
-             </fareOptions>
-             <travelFlightInfo>
-                <companyIdentity>
-                   <carrierQualifier>X</carrierQualifier>
-                   <carrierId>NK</carrierId>
-                   <carrierId>F9</carrierId>
-                </companyIdentity>
-                <flightDetail>
-                   <flightType>N</flightType>
-                </flightDetail>
-             </travelFlightInfo>
-             <itinerary>
-                <requestedSegmentRef>
-                   <segRef>1</segRef>
-                </requestedSegmentRef>
-                <departureLocalization>
-                   <departurePoint>
-                      <locationId>HAV</locationId>
-                   </departurePoint>
-                </departureLocalization>
-                <arrivalLocalization>
-                   <arrivalPointDetails>
-                      <locationId>SCU</locationId>
-                   </arrivalPointDetails>
-                </arrivalLocalization>
-                <timeDetails>
-                   <firstDateTimeDetail>
-                      <date>130825</date>
-                   </firstDateTimeDetail>
-                </timeDetails>
-             </itinerary>
-             <itinerary>
-                <requestedSegmentRef>
-                   <segRef>2</segRef>
-                </requestedSegmentRef>
-                <departureLocalization>
-                   <departurePoint>
-                      <locationId>SCU</locationId>
-                   </departurePoint>
-                </departureLocalization>
-                <arrivalLocalization>
-                   <arrivalPointDetails>
-                      <locationId>HAV</locationId>
-                   </arrivalPointDetails>
-                </arrivalLocalization>
-                <timeDetails>
-                   <firstDateTimeDetail>
-                      <date>200825</date>
-                   </firstDateTimeDetail>
-                </timeDetails>
-             </itinerary>
-          </Fare_MasterPricerTravelBoardSearch>
-       </soapenv:Body>
-    </soap:Envelope>
-"""
+                {traveller_xml(adults)}
+            </paxReference>
+        """
+    if children:
+        passengers_query += f"""
+            <paxReference>
+                <ptc>CHD</ptc>
+                {traveller_xml(children)}
+            </paxReference>
+        """
+    if infants:
+        passengers_query += f"""
+            <paxReference>
+                <ptc>INF</ptc>
+                {traveller_xml(infants, True)}
+            </paxReference>
+        """
+
+    itinerary_query = ''
+    for route in itinerary:
+        itinerary_query += f"""<itinerary>
+            <requestedSegmentRef>
+               <segRef>{route.ref}</segRef>
+            </requestedSegmentRef>
+            <departureLocalization>
+               <departurePoint>
+                  <locationId>{route.departing_from}</locationId>
+               </departurePoint>
+            </departureLocalization>
+            <arrivalLocalization>
+               <arrivalPointDetails>
+                  <locationId>{route.arriving_to}</locationId>
+               </arrivalPointDetails>
+            </arrivalLocalization>
+            <timeDetails>
+               <firstDateTimeDetail>
+                  <date>{route.date}</date>
+               </firstDateTimeDetail>
+            </timeDetails>
+         </itinerary>"""
+
+    return f"""
+        <soap:Envelope 
+            xmlns:soap="http://www.w3.org/2003/05/soap-envelope"
+            xmlns:wss="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+            xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+            xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" 
+            xmlns:sec="http://xml.amadeus.com/2010/06/Security_v1" 
+            xmlns:typ="http://xml.amadeus.com/2010/06/Types_v1" 
+            xmlns:iat="http://www.iata.org/IATA/2007/00/IATA2010.1" 
+            xmlns:app="http://xml.amadeus.com/2010/06/AppMdw_CommonTypes_v3" 
+            xmlns:link="http://wsdl.amadeus.com/2010/06/ws/Link_v1" 
+            xmlns:ses="http://xml.amadeus.com/2010/06/Session_v3">
+        
+           <soapenv:Header xmlns:add="http://www.w3.org/2005/08/addressing">
+              <add:MessageID>WbsConsu-{message_id}</add:MessageID>
+              <add:Action>{action}</add:Action>
+              <add:To>{settings.AMADEUS_CONFIG['ENDPOINT']}</add:To>
+              <oas:Security xmlns:oas="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+                            xmlns:oas1="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+                 <oas:UsernameToken oas1:Id="UsernameToken-1">
+                    <oas:Username>{settings.AMADEUS_CONFIG['USERNAME']}</oas:Username>
+                    <oas:Nonce EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary">
+                        {nonce}
+                    </oas:Nonce>
+                    <oas:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest">
+                        {password_digest}
+                    </oas:Password>
+                    <oas1:Created>{created_at}</oas1:Created>
+                </oas:UsernameToken>
+              </oas:Security>
+              <AMA_SecurityHostedUser xmlns="http://xml.amadeus.com/2010/06/Security_v1">
+                 <UserID AgentDutyCode="SU" RequestorType="U" PseudoCityCode="{settings.AMADEUS_CONFIG.get('OFFICE_ID')}" POS_Type="1"/>
+              </AMA_SecurityHostedUser>
+              <awsse:Session TransactionStatusCode="Start" xmlns:awsse="http://xml.amadeus.com/2010/06/Session_v3"/>
+            </soapenv:Header>
+        
+           <soapenv:Body>
+              <Fare_MasterPricerTravelBoardSearch>
+                 <numberOfUnit>
+                    <unitNumberDetail>
+                       <numberOfUnits>{len(passengers)}</numberOfUnits>
+                       <typeOfUnit>PX</typeOfUnit>
+                    </unitNumberDetail>
+                    <unitNumberDetail>
+                       <numberOfUnits>100</numberOfUnits>
+                       <typeOfUnit>RC</typeOfUnit>
+                    </unitNumberDetail>
+                 </numberOfUnit>
+                 {passengers_query}
+                 <fareOptions>
+                    <pricingTickInfo>
+                       <pricingTicketing>
+                          <priceType>ET</priceType>
+                          <priceType>RP</priceType>
+                          <priceType>RU</priceType>
+                          <priceType>TAC</priceType>
+                          <priceType>XND</priceType>
+                          <priceType>XLA</priceType>
+                          <priceType>XLO</priceType>
+                          <priceType>XLC</priceType>
+                          <priceType>XND</priceType>
+                       </pricingTicketing>
+                    </pricingTickInfo>
+                 </fareOptions>
+                 <travelFlightInfo>
+                    <companyIdentity>
+                        <carrierQualifier>X</carrierQualifier>
+                        <carrierId>NK</carrierId>
+                        <carrierId>F9</carrierId>
+                    </companyIdentity>
+                    <flightDetail>
+                        <flightType>N</flightType>
+                    </flightDetail>
+                 </travelFlightInfo>
+                 {itinerary_query}
+              </Fare_MasterPricerTravelBoardSearch>
+           </soapenv:Body>
+        </soap:Envelope>
+    """
+
 
 FLIGHT_INFORMATIVE_PRICING_WITHOUT_PNR_QUERY = """
     <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sec="http://xml.amadeus.com/2010/06/Security_v1" xmlns:typ="http://xml.amadeus.com/2010/06/Types_v1" xmlns:iat="http://www.iata.org/IATA/2007/00/IATA2010.1" xmlns:app="http://xml.amadeus.com/2010/06/AppMdw_CommonTypes_v3" xmlns:link="http://wsdl.amadeus.com/2010/06/ws/Link_v1" xmlns:ses="http://xml.amadeus.com/2010/06/Session_v3">
