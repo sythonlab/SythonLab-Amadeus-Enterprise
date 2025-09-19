@@ -1,5 +1,13 @@
 from dataclasses import dataclass
 
+from enum import Enum
+
+
+class AvailabilityPaxCategory(Enum):
+    ADULT = 'ADULT'
+    CHILD = 'CHILD'
+    INFANT = 'INFANT'
+
 
 @dataclass
 class AvailabilityItinerary:
@@ -11,4 +19,4 @@ class AvailabilityItinerary:
 
 @dataclass
 class AvailabilityPassenger:
-    type: str
+    type: AvailabilityPaxCategory

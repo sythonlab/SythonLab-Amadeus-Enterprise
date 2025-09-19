@@ -13,7 +13,8 @@ from flights.queries import get_flight_availability_query, FLIGHT_INFORMATIVE_PR
 class AmadeusFlightSDK:
 
     @staticmethod
-    def get_availability(passengers: List[AvailabilityPassenger], itinerary: List[AvailabilityItinerary]):
+    def get_availability(passengers: List[AvailabilityPassenger], itinerary: List[AvailabilityItinerary],
+                         show_traces=False):
         """
            Retrieve flight availability with minimum prices using the
            Amadeus SOAP service.
@@ -43,7 +44,8 @@ class AmadeusFlightSDK:
             ),
             http_headers={
                 'SOAPAction': action
-            }
+            },
+            show_traces=show_traces
         )
 
     def informative_pricing_without_pnr(self):

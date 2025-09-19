@@ -1,22 +1,30 @@
 from core.amadeus_sdk import AmadeusSDK
 from flights.amadeus_flight_sdk import AmadeusFlightSDK
-from flights.data_classes import AvailabilityPassenger, AvailabilityItinerary
+from flights.data_classes import AvailabilityPassenger, AvailabilityItinerary, AvailabilityPaxCategory
 
 sdk = AmadeusFlightSDK()
 
 availability_status, availability = sdk.get_availability(
-    passengers=[AvailabilityPassenger(type='adult')],
+    passengers=[
+        AvailabilityPassenger(type=AvailabilityPaxCategory.ADULT),
+        AvailabilityPassenger(type=AvailabilityPaxCategory.ADULT),
+        AvailabilityPassenger(type=AvailabilityPaxCategory.CHILD),
+        AvailabilityPassenger(type=AvailabilityPaxCategory.CHILD),
+        AvailabilityPassenger(type=AvailabilityPaxCategory.INFANT),
+        AvailabilityPassenger(type=AvailabilityPaxCategory.INFANT),
+    ],
     itinerary=[AvailabilityItinerary(
         ref=1,
         departing_from='HAV',
         arriving_to='SCU',
         date='201025'
     ), AvailabilityItinerary(
-        ref=1,
+        ref=2,
         departing_from='SCU',
         arriving_to='HAV',
         date='251025'
     )],
+    show_traces=True
 )
 print('AVAILABILITY', availability_status, availability)
 

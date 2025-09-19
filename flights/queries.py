@@ -1,7 +1,7 @@
 from typing import List
 
 import settings
-from flights.data_classes import AvailabilityItinerary, AvailabilityPassenger
+from flights.data_classes import AvailabilityItinerary, AvailabilityPassenger, AvailabilityPaxCategory
 
 
 def get_flight_availability_query(
@@ -9,35 +9,37 @@ def get_flight_availability_query(
         passengers: List[AvailabilityPassenger],
         itinerary: List[AvailabilityItinerary]
 ):
-    traveller_xml = lambda travellers, is_infant=False: ''.join(
-        [f"<traveller><ref>{i + 1}</ref>{'<infantIndicator>1</infantIndicator>' if is_infant else ''}</traveller>"
-         for i, pax in enumerate(travellers)]
+    traveller_xml = lambda travellers, is_infant=False, start_in=1: ''.join(
+        [
+            f"<traveller><ref>{i + start_in}</ref>{'<infantIndicator>1</infantIndicator>' if is_infant else ''}</traveller>"
+            for i, pax in enumerate(travellers)
+        ]
     )
 
     passengers_query = ''
-    adults = list(filter(lambda x: x.type == 'adult', passengers))
-    children = list(filter(lambda x: x.type == 'child', passengers))
-    infants = list(filter(lambda x: x.type == 'infant', passengers))
+    adults = list(filter(lambda x: x.type == AvailabilityPaxCategory.ADULT, passengers))
+    children = list(filter(lambda x: x.type == AvailabilityPaxCategory.CHILD, passengers))
+    infants = list(filter(lambda x: x.type == AvailabilityPaxCategory.INFANT, passengers))
 
     if adults:
         passengers_query += f"""
             <paxReference>
                 <ptc>ADT</ptc>
-                {traveller_xml(adults)}
+                {traveller_xml(adults, False, 1)}
             </paxReference>
         """
     if children:
         passengers_query += f"""
             <paxReference>
                 <ptc>CHD</ptc>
-                {traveller_xml(children)}
+                {traveller_xml(children, False, len(adults) + 1)}
             </paxReference>
         """
     if infants:
         passengers_query += f"""
             <paxReference>
                 <ptc>INF</ptc>
-                {traveller_xml(infants, True)}
+                {traveller_xml(infants, True, len(adults) + len(children) + 1)}
             </paxReference>
         """
 
