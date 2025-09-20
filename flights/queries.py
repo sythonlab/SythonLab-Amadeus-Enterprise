@@ -39,7 +39,7 @@ def get_flight_availability_query(
         passengers_query += f"""
             <paxReference>
                 <ptc>INF</ptc>
-                {traveller_xml(infants, True, len(adults) + len(children) + 1)}
+                {traveller_xml(infants, True, 1)}
             </paxReference>
         """
 
@@ -106,7 +106,7 @@ def get_flight_availability_query(
               <Fare_MasterPricerTravelBoardSearch>
                  <numberOfUnit>
                     <unitNumberDetail>
-                       <numberOfUnits>{len(passengers)}</numberOfUnits>
+                       <numberOfUnits>{len(passengers) - len(infants)}</numberOfUnits>
                        <typeOfUnit>PX</typeOfUnit>
                     </unitNumberDetail>
                     <unitNumberDetail>
