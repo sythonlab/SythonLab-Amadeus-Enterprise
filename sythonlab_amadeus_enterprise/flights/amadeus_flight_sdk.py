@@ -1,8 +1,8 @@
 from typing import List
 
 from sythonlab_amadeus_enterprise import settings
-from core.amadeus_sdk import AmadeusSDK
-from core.header_generator import AmadeusHeaderGenerator
+from sythonlab_amadeus_enterprise.core.amadeus_sdk import AmadeusSDK
+from sythonlab_amadeus_enterprise.core.header_generator import AmadeusHeaderGenerator
 from sythonlab_amadeus_enterprise.flights.data_classes import AvailabilityPassenger, AvailabilityItinerary
 from sythonlab_amadeus_enterprise.flights.queries import get_flight_availability_query, \
     FLIGHT_INFORMATIVE_PRICING_WITHOUT_PNR_QUERY, \
@@ -14,7 +14,7 @@ from sythonlab_amadeus_enterprise.flights.queries import get_flight_availability
 class AmadeusFlightSDK:
 
     @staticmethod
-    def get_availability(passengers: List[AvailabilityPassenger], itinerary: List[AvailabilityItinerary],
+    def get_availability(passengers: List[AvailabilityPassenger], itinerary: Lipassword_bytesst[AvailabilityItinerary],
                          show_traces=False):
         """
            Retrieve flight availability with minimum prices using the
