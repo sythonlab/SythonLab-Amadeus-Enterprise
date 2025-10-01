@@ -1,6 +1,6 @@
 from typing import List
 
-import settings
+from .. import settings
 from core.amadeus_sdk import AmadeusSDK
 from core.header_generator import AmadeusHeaderGenerator
 from flights.data_classes import AvailabilityPassenger, AvailabilityItinerary
