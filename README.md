@@ -26,7 +26,7 @@ AMADEUS_FLIGHT_ENDPOINT=https://nodeD1.test.webservices.amadeus.com/1ASIWCARCPJ
 ## How to use?
 
 ```python
-from flights.amadeus_flight_sdk import AmadeusFlightSDK
+from sythonlab_amadeus_enterprise.flights.amadeus_flight_sdk import AmadeusFlightSDK
 
 sdk = AmadeusFlightSDK()
 # custom_config_file: Optional parameter, specifies the path to a .json file to save the configuration.

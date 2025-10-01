@@ -3,7 +3,7 @@ import hashlib
 import os
 from datetime import datetime, timezone
 
-import settings
+from sythonlab_amadeus_enterprise import settings
 
 
 class AmadeusHeaderGenerator:

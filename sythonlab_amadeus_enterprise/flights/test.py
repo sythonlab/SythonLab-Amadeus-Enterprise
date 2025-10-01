@@ -1,6 +1,5 @@
-from core.amadeus_sdk import AmadeusSDK
-from flights.amadeus_flight_sdk import AmadeusFlightSDK
-from flights.data_classes import AvailabilityPassenger, AvailabilityItinerary, AvailabilityPaxCategory
+from sythonlab_amadeus_enterprise.flights.amadeus_flight_sdk import AmadeusFlightSDK
+from sythonlab_amadeus_enterprise.flights.data_classes import AvailabilityPassenger, AvailabilityItinerary, AvailabilityPaxCategory
 
 sdk = AmadeusFlightSDK()
 

@@ -1,10 +1,11 @@
 from typing import List
 
-from .. import settings
+from sythonlab_amadeus_enterprise import settings
 from core.amadeus_sdk import AmadeusSDK
 from core.header_generator import AmadeusHeaderGenerator
-from flights.data_classes import AvailabilityPassenger, AvailabilityItinerary
-from flights.queries import get_flight_availability_query, FLIGHT_INFORMATIVE_PRICING_WITHOUT_PNR_QUERY, \
+from sythonlab_amadeus_enterprise.flights.data_classes import AvailabilityPassenger, AvailabilityItinerary
+from sythonlab_amadeus_enterprise.flights.queries import get_flight_availability_query, \
+    FLIGHT_INFORMATIVE_PRICING_WITHOUT_PNR_QUERY, \
     FLIGHT_CHECK_RULES_QUERY, FLIGHT_SIGNOUT_QUERY, FLIGHT_RESERVE_QUERY, FLIGHT_ADD_PASSENGERS_QUERY, \
     ADD_CASH_PAYMENT_QUERY, FARE_PRICE_PNR_WITH_BOOKING_CLASS_QUERY, TICKET_CREATE_TST_FROM_PRICING_QUERY, \
     PNR_ADD_MULTIELEMENTS_QUERY, PNR_RETRIEVE_QUERY, ISSUE_TICKET_QUERY, PNR_RETRIEVE_ISSUED_QUERY

@@ -1,7 +1,7 @@
 from typing import List
 
-import settings
-from flights.data_classes import AvailabilityItinerary, AvailabilityPassenger, AvailabilityPaxCategory
+from sythonlab_amadeus_enterprise import settings
+from sythonlab_amadeus_enterprise.flights.data_classes import AvailabilityItinerary, AvailabilityPassenger, AvailabilityPaxCategory
 
 
 def get_flight_availability_query(
